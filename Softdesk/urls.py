@@ -26,7 +26,7 @@ from desk.views import ProjectViewSet, IssueViewSet, CommentViewSet
 
 # Router for authentication app, taking care of user model
 user_router = routers.SimpleRouter()
-user_router.register('user', UserViewSet, basename='user')
+user_router.register('users', UserViewSet, basename='user')
 
 # Router for desk app, managing the objects
 desk_router = routers.DefaultRouter()
