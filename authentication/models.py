@@ -2,10 +2,11 @@ from django.db import models
 
 from django.contrib.auth.models import AbstractUser
 
+from .validators import validate_age
 
-# Ceci est un test.
+
 class CustomUser(AbstractUser):
-    age = models.PositiveIntegerField(null=True, blank=True)
+    age = models.PositiveIntegerField(validators=[validate_age])
     can_data_be_shared = models.BooleanField(default=False)
     can_be_contacted = models.BooleanField(default=False)
 

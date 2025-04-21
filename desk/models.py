@@ -68,6 +68,7 @@ class Issue(models.Model):
     tag = models.CharField(max_length=15, choices=TAG)
     assign = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.SET_NULL, null=True,
                                  related_name="assigned_issues")
+    author = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="authored_issues")
     created_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
