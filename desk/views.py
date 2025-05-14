@@ -55,6 +55,11 @@ class IssueViewSet(viewsets.ModelViewSet):
     serializer_class = IssueSerializer
     permission_classes = [IsContributorIssue]
 
+    def get_serializers_context(self):
+        context = super().get_serializers_context()
+        context['project'] = self.kwargs.get('project_pk')
+        return context
+
     def get_permissions(self):
 
         if self.action == 'create':
@@ -68,6 +73,20 @@ class IssueViewSet(viewsets.ModelViewSet):
 
         return super().get_permissions()
 
+    @action(detail=True, methos=['patch'], permission_classes=[IsAuthenticated, IsContributor])
+    def update_status(self, request, pk=None):
+        issue = self.get_object
+        new_status = request.data.get('status')
+
+        if not new_status:
+            return Response({'detail': 'Status is required.'}, status=status.HTTP_400_BAD_REQUEST)
+
+        if new_status not in [choice[0] for choice in Issue.STATUS]:
+            return Response({'detail': 'Invalid status.'}, status=status.HTTP_400_BAD_REQUEST)
+
+        issue.status = new_status
+        issue.save()
+        return Response({'detail': 'Status updated successfully.'}, status=status.HTTP_200_OK)
 
 class CommentViewSet(viewsets.ModelViewSet):
     queryset = Comment.objects.all()
