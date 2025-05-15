@@ -73,7 +73,7 @@ class IssueViewSet(viewsets.ModelViewSet):
 
         return super().get_permissions()
 
-    @action(detail=True, methos=['patch'], permission_classes=[IsAuthenticated, IsContributor])
+    @action(detail=True, methods=['patch'], permission_classes=[IsAuthenticated, IsContributor])
     def update_status(self, request, pk=None):
         issue = self.get_object
         new_status = request.data.get('status')
