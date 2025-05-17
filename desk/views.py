@@ -1,4 +1,4 @@
-from rest_framework import viewsets, status
+from rest_framework import viewsets, status, permissions
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.decorators import action
 from rest_framework.response import Response
@@ -36,24 +36,23 @@ class ProjectViewSet(viewsets.ModelViewSet):
                             status=status.HTTP_200_OK)
 
     def get_permissions(self):
+        permission_classes = [IsAuthenticated]
 
         if self.action == 'create':
-            self.permission_classes = IsAuthenticated
-
+            permission_classes = [IsAuthenticated]
         elif self.action in ['update', 'partial_update', 'destroy']:
-            self.permission_classes = [IsAuthenticated, IsAuthor]
-
+            permission_classes = [IsAuthenticated, IsAuthor]
         elif self.action in ['retrieve', 'list']:
-            self.permission_classes = [IsAuthenticated, IsContributor | IsAuthor]
+            permission_classes = [IsAuthenticated, IsContributor]
 
-        return super().get_permissions()
+        return [permission() for permission in permission_classes]
 
 
 
 class IssueViewSet(viewsets.ModelViewSet):
     queryset = Issue.objects.all()
     serializer_class = IssueSerializer
-    permission_classes = [IsContributorIssue]
+    permission_classes = [IsAuthenticated]
 
     def get_serializers_context(self):
         context = super().get_serializers_context()
@@ -61,17 +60,18 @@ class IssueViewSet(viewsets.ModelViewSet):
         return context
 
     def get_permissions(self):
+        permission_classes = [IsAuthenticated]
 
         if self.action == 'create':
-            self.permission_classes = [IsContributorIssue]
+            permission_classes = [IsAuthenticated, IsContributorIssue]
 
         elif self.action in ['update', 'partial_update', 'destroy']:
-            self.permission_classes = [IsAuthenticated, IsAuthor]
+            permission_classes = [IsAuthenticated, IsAuthor]
 
         elif self.action in ['retrieve', 'list']:
-            self.permission_classes = [IsContributorIssue | IsAuthor]
+            permission_classes = [IsAuthenticated, (IsContributorIssue | IsAuthor)]
 
-        return super().get_permissions()
+        return [permission() for permission in permission_classes]
 
     @action(detail=True, methods=['patch'], permission_classes=[IsAuthenticated, IsContributor])
     def update_status(self, request, pk=None):
@@ -95,14 +95,15 @@ class CommentViewSet(viewsets.ModelViewSet):
 
 
     def get_permissions(self):
+        permission_classes = [IsAuthenticated]
 
         if self.action == 'create':
-            self.permission_classes = [IsContributorComment]
+            permission_classes = [IsAuthenticated, IsContributorComment]
 
         elif self.action in ['update', 'partial_update', 'destroy']:
-            self.permission_classes = [IsAuthenticated, IsAuthor]
+            permission_classes = [IsAuthenticated, IsAuthor]
 
         elif self.action in ['retrieve', 'list']:
-            self.permission_classes = [IsContributorComment | IsAuthor]
+            permission_classes = [IsAuthenticated, (IsContributorComment | IsAuthor)]
 
-        return super().get_permissions()
+        return [permission() for permission in permission_classes]

@@ -1,5 +1,5 @@
 from rest_framework.viewsets import ModelViewSet
-from rest_framework.permissions import IsAuthenticated
+from rest_framework import permissions
 
 from .models import CustomUser
 from .serializers import UserSerializer
@@ -12,10 +12,11 @@ class UserViewSet(ModelViewSet):
 
     def get_permissions(self):
         if self.action == 'create':
-            self.permission_classes = [permissions.AllowAny]
+            permission_classes = [permissions.AllowAny]
         else:
-            self.permission_classes = [permissions.IsAuthenticated, IsOwner]
-        return super().get_permissions()
+            permission_classes = [permissions.IsAuthenticated]
+
+        return [permission() for permission in permission_classes]
 
 
     def get_queryset(self):

@@ -201,10 +201,10 @@ Content-Type: application/json
  |--------------------------------------|-------------|------|-----|--------|
  | /projects/                           | Contributor | Auth | Author | Author |
  | /projects/{id}/                      | Contributor | - | Author | Author |
- | /projects/{id}/issues/               | Contributor | Contributor | Author | Author |
- | /projects/{id}/issues/{id}/          | Contributor | - | Author | Author |
+ | /issues/               | Contributor | Contributor | Author | Author |
+ | /issues/{id}/          | Contributor | - | Author | Author |
  | /projects/{id}/issues/{id}/assign/   | Contributor | Author | - | - |
- | /projects/{id}/issues/{id}/comments/ | Contributor | Contributor | Author | Author |
+ | /comments/ | Contributor | Contributor | Author | Author |
 
 ### Exemples de requêtes
 
