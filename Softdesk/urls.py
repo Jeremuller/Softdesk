@@ -33,8 +33,6 @@ user_router.register('users', UserViewSet, basename='user')
 # Router for desk app, managing the objects
 desk_router = routers.DefaultRouter()
 desk_router.register(r'projects', ProjectViewSet, basename='project')
-desk_router.register(r'issues', IssueViewSet, basename='issue')
-desk_router.register(r'comments', CommentViewSet, basename='comment')
 
 
 urlpatterns = [
@@ -44,4 +42,24 @@ urlpatterns = [
     path('api/token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
     path('api/', include(user_router.urls)),
     path('api/', include(desk_router.urls)),
+    path('api/projects/<int:project_id>/issues/', IssueViewSet.as_view({
+            'get': 'list',
+            'post': 'create'
+        }), name='project-issues'),
+    path('api/projects/<int:project_id>/issues/<int:pk>/', IssueViewSet.as_view({
+            'get': 'retrieve',
+            'put': 'update',
+            'patch': 'partial_update',
+            'delete': 'destroy'
+        }), name='project-issue-detail'),
+    path('api/projects/<int:project_id>/issues/<int:issue_id>/comments/', CommentViewSet.as_view({
+            'get': 'list',
+            'post': 'create'
+        }), name='issue-comments'),
+    path('api/projects/<int:project_id>/issues/<int:issue_id>/comments/<int:pk>/', CommentViewSet.as_view({
+            'get': 'retrieve',
+            'put': 'update',
+            'patch': 'partial_update',
+            'delete': 'destroy'
+        }), name='issue-comment-detail'),
 ]
