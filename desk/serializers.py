@@ -27,22 +27,6 @@ class IssueSerializer(serializers.ModelSerializer):
             'project': {'required': False}
         }
 
-    def validate_assign(self, value):
-
-        if value is None:
-            return value
-
-        project = self.context.get('project')
-        if not project:
-            raise serializers.ValidationError("Project context is missing.")
-
-        # Check if the assigned user is project's contributor
-        if value == project.author:
-            return value
-        if value and not Contributor.objects.filter(project=project, user=value).exists():
-            raise serializers.ValidationError("This user is not a contributor of this project.")
-        return value
-
 
 class CommentSerializer(serializers.ModelSerializer):
     class Meta:

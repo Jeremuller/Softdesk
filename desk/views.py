@@ -69,8 +69,8 @@ class IssueViewSet(viewsets.ModelViewSet):
         )
 
     def get_serializers_context(self):
-        context = super().get_serializers_context()
-        context['project'] = get_object_or_404(Project, id=self.kwargs['project_id'])
+        context = super().get_serializer_context()
+        context['project'] = get_object_or_404(project, id=self.kwargs['project_id'])
         return context
 
     def get_permissions(self):
