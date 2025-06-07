@@ -45,7 +45,7 @@ class ProjectViewSet(viewsets.ModelViewSet):
         elif self.action in ['update', 'partial_update', 'destroy']:
             permission_classes = [IsAuthenticated, IsAuthor]
         elif self.action in ['retrieve', 'list']:
-            permission_classes = [IsAuthenticated, IsContributor]
+            permission_classes = [IsAuthenticated, IsContributor | IsAuthor]
 
         return [permission() for permission in permission_classes]
 
